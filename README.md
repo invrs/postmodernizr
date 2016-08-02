@@ -8,6 +8,8 @@ Custom [modernizr](https://modernizr.com/) build
 
 ### Building
 
-[Customize](https://modernizr.com/download?setclasses) with all needed packages
+[Customize](https://modernizr.com/download?setclasses) with all needed packages.
 
-`modernizr -c modernizr-config.json` to build custom modernizr js
+Copy `Command Line Config` into modernizr-config.json.
+
+Run `modernizr -c modernizr-config.json` to build custom modernizr.js
