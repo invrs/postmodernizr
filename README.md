@@ -10,6 +10,6 @@ Custom [modernizr](https://modernizr.com/) build
 
 [Customize](https://modernizr.com/download?setclasses) with all needed packages.
 
-Copy `Command Line Config` into modernizr-config.json.
+Build and copy `Command Line Config` into modernizr-config.json.
 
 Run `modernizr -c modernizr-config.json` to build custom modernizr.js
