@@ -1,6 +1,6 @@
 # postmodernizr
 
-Custom modernizr build (https://modernizr.com/)
+Custom (modernizr)[https://modernizr.com/] build
 
 ### Getting Started
 
@@ -8,6 +8,6 @@ Custom modernizr build (https://modernizr.com/)
 
 ### Building
 
-Go to https://modernizr.com/download?setclasses and choose all needed packages
+(Customize)[https://modernizr.com/download?setclasses] with all needed packages
 
 `modernizr -c modernizr-config.json` to build custom modernizr js
