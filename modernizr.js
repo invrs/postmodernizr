@@ -1,6 +1,6 @@
 /*!
  * modernizr v3.3.1
- * Build http://modernizr.com/download?-csspositionsticky-setclasses-dontmin
+ * Build http://modernizr.com/download?-csspositionsticky-svgclippaths-setclasses-dontmin
  *
  * Copyright (c)
  *  Faruk Ates
@@ -317,6 +317,41 @@
     mStyle.cssText = prop + prefixes.join(value + ';' + prop).slice(0, -prop.length);
 
     return mStyle.position.indexOf(value) !== -1;
+  });
+
+
+  /**
+   * Object.prototype.toString can be used with every object and allows you to
+   * get its class easily. Abstracting it off of an object prevents situations
+   * where the toString property has been overridden
+   *
+   * @access private
+   * @function toStringFn
+   * @returns {function} An abstracted toString function
+   */
+
+  var toStringFn = ({}).toString;
+  
+/*!
+{
+  "name": "SVG clip paths",
+  "property": "svgclippaths",
+  "tags": ["svg"],
+  "notes": [{
+    "name": "Demo",
+    "href": "http://srufaculty.sru.edu/david.dailey/svg/newstuff/clipPath4.svg"
+  }]
+}
+!*/
+/* DOC
+Detects support for clip paths in SVG (only, not on HTML content).
+
+See [this discussion](https://github.com/Modernizr/Modernizr/issues/213) regarding applying SVG clip paths to HTML content.
+*/
+
+  Modernizr.addTest('svgclippaths', function() {
+    return !!document.createElementNS &&
+      /SVGClipPath/.test(toStringFn.call(document.createElementNS('http://www.w3.org/2000/svg', 'clipPath')));
   });
 
 
