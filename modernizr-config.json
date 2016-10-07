@@ -4,7 +4,6 @@
     "setClasses"
   ],
   "feature-detects": [
-    "test/css/positionsticky",
-    "test/svg/clippaths"
+    "test/css/positionsticky"
   ]
 }
