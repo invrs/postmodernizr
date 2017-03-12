@@ -4,7 +4,6 @@
     "setClasses"
   ],
   "feature-detects": [
-    "test/css/positionsticky",
-    "test/css/transforms3d"
+    "test/css/positionsticky"
   ]
 }
