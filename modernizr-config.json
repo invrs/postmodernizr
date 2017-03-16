@@ -4,8 +4,6 @@
     "setClasses"
   ],
   "feature-detects": [
-    "test/css/positionsticky",
-    "test/css/vhunit",
-    "test/css/vwunit"
+    "test/css/positionsticky"
   ]
 }
