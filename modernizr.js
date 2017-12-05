@@ -1,6 +1,6 @@
 /*!
  * modernizr v3.3.1
- * Build http://modernizr.com/download?-csspositionsticky-setclasses-dontmin
+ * Build http://modernizr.com/download?-csspositionsticky-progressbar_meter-setclasses-dontmin
  *
  * Copyright (c)
  *  Faruk Ates
@@ -318,6 +318,23 @@
 
     return mStyle.position.indexOf(value) !== -1;
   });
+
+/*!
+{
+  "name": "progress Element",
+  "caniuse": "progress",
+  "property": ["progressbar", "meter"],
+  "tags": ["elem"],
+  "builderAliases": ["elem_progress_meter"],
+  "authors": ["Stefan Wallin"]
+}
+!*/
+
+  // Tests for progressbar-support. All browsers that don't support progressbar returns undefined =)
+  Modernizr.addTest('progressbar', createElement('progress').max !== undefined);
+
+  // Tests for meter-support. All browsers that don't support meters returns undefined =)
+  Modernizr.addTest('meter', createElement('meter').max !== undefined);
 
 
   // Run each test
