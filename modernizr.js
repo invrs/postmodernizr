@@ -1,6 +1,6 @@
 /*!
- * modernizr v3.3.1
- * Build http://modernizr.com/download?-csspositionsticky-videoautoplay-setclasses-dontmin
+ * modernizr v3.6.0
+ * Build https://modernizr.com/download?-csspositionsticky-videoautoplay-setclasses-dontmin
  *
  * Copyright (c)
  *  Faruk Ates
@@ -36,7 +36,7 @@
 
   var ModernizrProto = {
     // The current version, dummy
-    _version: '3.3.1',
+    _version: '3.6.0',
 
     // Any settings that don't work as separate modules
     // can go in here as configuration.
@@ -159,7 +159,6 @@
             Modernizr[featureNameSplit[0]] = result;
           } else {
             // cast to a Boolean, if not one already
-            /* jshint -W053 */
             if (Modernizr[featureNameSplit[0]] && !(Modernizr[featureNameSplit[0]] instanceof Boolean)) {
               Modernizr[featureNameSplit[0]] = new Boolean(Modernizr[featureNameSplit[0]]);
             }
@@ -222,7 +221,11 @@
     if (Modernizr._config.enableClasses) {
       // Add the new classes
       className += ' ' + classPrefix + classes.join(' ' + classPrefix);
-      isSVG ? docElement.className.baseVal = className : docElement.className = className;
+      if (isSVG) {
+        docElement.className.baseVal = className;
+      } else {
+        docElement.className = className;
+      }
     }
 
   }
@@ -286,7 +289,9 @@
    * ```
    */
 
-  var prefixes = (ModernizrProto._config.usePrefixes ? ' -webkit- -moz- -o- -ms- '.split(' ') : []);
+  // we use ['',''] rather than an empty array in order to allow a pattern of .`join()`ing prefixes to test
+  // values in feature detects to continue to work
+  var prefixes = (ModernizrProto._config.usePrefixes ? ' -webkit- -moz- -o- -ms- '.split(' ') : ['','']);
 
   // expose these for the plugin API. Look in the source for how to join() them against your input
   ModernizrProto._prefixes = prefixes;
@@ -536,7 +541,6 @@
         Modernizr[featureNameSplit[0]] = test;
       } else {
         // cast to a Boolean, if not one already
-        /* jshint -W053 */
         if (Modernizr[featureNameSplit[0]] && !(Modernizr[featureNameSplit[0]] instanceof Boolean)) {
           Modernizr[featureNameSplit[0]] = new Boolean(Modernizr[featureNameSplit[0]]);
         }
@@ -545,9 +549,7 @@
       }
 
       // Set a single class (either `feature` or `no-feature`)
-      /* jshint -W041 */
       setClasses([(!!test && test != false ? '' : 'no-') + featureNameSplit.join('-')]);
-      /* jshint +W041 */
 
       // Trigger the event
       Modernizr._trigger(feature, test);
@@ -601,13 +603,13 @@ Modernizr.video.ogg     // 'probably'
   //   It was also live in Safari 4.0.0 - 4.0.4, but fixed in 4.0.5
 
   Modernizr.addTest('video', function() {
-    /* jshint -W053 */
     var elem = createElement('video');
     var bool = false;
 
     // IE9 Running on Windows Server SKU can cause an exception to be thrown, bug #224
     try {
-      if (bool = !!elem.canPlayType) {
+      bool = !!elem.canPlayType
+      if (bool) {
         bool = new Boolean(bool);
         bool.ogg = elem.canPlayType('video/ogg; codecs="theora"').replace(/^no$/, '');
 
@@ -642,15 +644,32 @@ Checks for support of the autoplay attribute of the video element.
 
   Modernizr.addAsyncTest(function() {
     var timeout;
-    var waitTime = 300;
+    var waitTime = 200;
+    var retries = 5;
+    var currentTry = 0;
     var elem = createElement('video');
     var elemStyle = elem.style;
 
     function testAutoplay(arg) {
+      currentTry++;
       clearTimeout(timeout);
+
+      var result = arg && arg.type === 'playing' || elem.currentTime !== 0;
+
+      if (!result && currentTry < retries) {
+        //Detection can be flaky if the browser is slow, so lets retry in a little bit
+        timeout = setTimeout(testAutoplay, waitTime);
+        return;
+      }
+
       elem.removeEventListener('playing', testAutoplay, false);
-      addTest('videoautoplay', arg && arg.type === 'playing' || elem.currentTime !== 0);
-      elem.parentNode.removeChild(elem);
+      addTest('videoautoplay', result);
+
+      // Cleanup, but don't assume elem is still in the page -
+      // an extension (eg Flashblock) may already have removed it.
+      if (elem.parentNode) {
+        elem.parentNode.removeChild(elem);
+      }
     }
 
     //skip the test if video itself, or the autoplay
@@ -683,7 +702,7 @@ Checks for support of the autoplay attribute of the video element.
     }
 
     elem.setAttribute('autoplay', '');
-    elem.style.cssText = 'display:none';
+    elemStyle.cssText = 'display:none';
     docElement.appendChild(elem);
     // wait for the next tick to add the listener, otherwise the element may
     // not have time to play in high load situations (e.g. the test suite)
